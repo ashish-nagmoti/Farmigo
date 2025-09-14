@@ -1,0 +1,101 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Container } from '@mui/material';
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ProfilePage from './pages/ProfilePage';
+import ColdStorageListPage from './pages/ColdStorageListPage';
+import ColdStorageDetailsPage from './pages/ColdStorageDetailsPage';
+import ColdStorageCreatePage from './pages/ColdStorageCreatePage';
+import ColdStorageEditPage from './pages/ColdStorageEditPage';
+import ColdStorageInsightsPage from './pages/ColdStorageInsightsPage';
+import FarmerDashboardPage from './pages/FarmerDashboardPage';
+import MarketplacePage from './pages/MarketplacePage';
+import ProductDetailsPage from './pages/ProductDetailsPage';
+import StandardsPage from './pages/StandardsPage';
+import StandardDetailsPage from './pages/StandardDetailsPage';
+import QualityAnalysisPage from './pages/QualityAnalysisPage';
+import NotFoundPage from './pages/NotFoundPage';
+import PrivateRoute from './components/routes/PrivateRoute';
+import AdminRoute from './components/routes/AdminRoute';
+import FarmerRoute from './components/routes/FarmerRoute';
+import BrokerRoute from './components/routes/BrokerRoute';
+
+const App = () => {
+  return (
+    <Router>
+      <Header />
+      <main className="app-container">
+        <Container maxWidth="lg">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <ProfilePage />
+                </PrivateRoute>
+              }
+            />
+            <Route path="/cold-storage" element={<ColdStorageListPage />} />
+            <Route
+              path="/cold-storage/search/:keyword"
+              element={<ColdStorageListPage />}
+            />
+            <Route
+              path="/cold-storage/page/:pageNumber"
+              element={<ColdStorageListPage />}
+            />
+            <Route
+              path="/cold-storage/search/:keyword/page/:pageNumber"
+              element={<ColdStorageListPage />}
+            />
+            <Route
+              path="/cold-storage/:id"
+              element={<ColdStorageDetailsPage />}
+            />
+            <Route
+              path="/cold-storage/create"
+              element={
+                <BrokerRoute>
+                  <ColdStorageCreatePage />
+                </BrokerRoute>
+              }
+            />
+            <Route
+              path="/cold-storage/:id/edit"
+              element={
+                <BrokerRoute>
+                  <ColdStorageEditPage />
+                </BrokerRoute>
+              }
+            />
+            <Route path="/cold-storage-insights" element={<ColdStorageInsightsPage />} />
+            <Route 
+              path="/farmer-dashboard" 
+              element={
+                <FarmerRoute>
+                  <FarmerDashboardPage />
+                </FarmerRoute>
+              } 
+            />
+            <Route path="/marketplace" element={<MarketplacePage />} />
+            <Route path="/products/:id" element={<ProductDetailsPage />} />
+            <Route path="/standards" element={<StandardsPage />} />
+            <Route path="/standards/:id" element={<StandardDetailsPage />} />
+            <Route path="/quality-analysis" element={<QualityAnalysisPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Container>
+      </main>
+      <Footer />
+    </Router>
+  );
+};
+
+export default App;

@@ -1,0 +1,285 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Andhra Pradesh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[78.0, 14.0], [79.0, 14.0], [79.0, 18.0], [78.0, 18.0], [78.0, 14.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Arunachal Pradesh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[92.0, 27.0], [94.0, 27.0], [94.0, 29.0], [92.0, 29.0], [92.0, 27.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Assam"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[90.0, 25.0], [94.0, 25.0], [94.0, 27.0], [90.0, 27.0], [90.0, 25.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bihar"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[84.0, 24.0], [88.0, 24.0], [88.0, 27.0], [84.0, 27.0], [84.0, 24.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Chhattisgarh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[80.0, 18.0], [84.0, 18.0], [84.0, 24.0], [80.0, 24.0], [80.0, 18.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Goa"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[73.7, 14.8], [74.3, 14.8], [74.3, 15.8], [73.7, 15.8], [73.7, 14.8]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gujarat"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[68.0, 20.0], [74.0, 20.0], [74.0, 24.0], [68.0, 24.0], [68.0, 20.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Haryana"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[74.0, 27.0], [77.0, 27.0], [77.0, 31.0], [74.0, 31.0], [74.0, 27.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Himachal Pradesh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[75.0, 30.5], [78.5, 30.5], [78.5, 33.5], [75.0, 33.5], [75.0, 30.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jharkhand"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[84.0, 22.0], [87.0, 22.0], [87.0, 25.0], [84.0, 25.0], [84.0, 22.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Karnataka"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[74.0, 12.0], [78.0, 12.0], [78.0, 18.0], [74.0, 18.0], [74.0, 12.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kerala"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[75.0, 8.0], [77.0, 8.0], [77.0, 12.0], [75.0, 12.0], [75.0, 8.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Madhya Pradesh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[74.0, 21.0], [82.0, 21.0], [82.0, 26.0], [74.0, 26.0], [74.0, 21.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Maharashtra"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[72.0, 16.0], [79.0, 16.0], [79.0, 22.0], [72.0, 22.0], [72.0, 16.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Manipur"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[93.5, 23.8], [94.5, 23.8], [94.5, 25.6], [93.5, 25.6], [93.5, 23.8]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Meghalaya"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[90.0, 25.0], [92.5, 25.0], [92.5, 26.0], [90.0, 26.0], [90.0, 25.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mizoram"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[92.5, 22.0], [93.5, 22.0], [93.5, 24.5], [92.5, 24.5], [92.5, 22.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Nagaland"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[93.0, 25.5], [95.0, 25.5], [95.0, 27.0], [93.0, 27.0], [93.0, 25.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Odisha"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[82.0, 17.5], [87.0, 17.5], [87.0, 22.5], [82.0, 22.5], [82.0, 17.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Punjab"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[73.5, 29.5], [77.0, 29.5], [77.0, 32.5], [73.5, 32.5], [73.5, 29.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Rajasthan"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[69.0, 23.0], [78.0, 23.0], [78.0, 30.0], [69.0, 30.0], [69.0, 23.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sikkim"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[88.0, 27.0], [89.0, 27.0], [89.0, 28.0], [88.0, 28.0], [88.0, 27.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tamil Nadu"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[76.0, 8.0], [80.5, 8.0], [80.5, 13.5], [76.0, 13.5], [76.0, 8.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Telangana"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[77.0, 16.0], [81.0, 16.0], [81.0, 20.0], [77.0, 20.0], [77.0, 16.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tripura"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[91.0, 22.5], [92.0, 22.5], [92.0, 24.5], [91.0, 24.5], [91.0, 22.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Uttar Pradesh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[77.0, 24.0], [84.5, 24.0], [84.5, 29.5], [77.0, 29.5], [77.0, 24.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Uttarakhand"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[77.5, 29.0], [81.0, 29.0], [81.0, 31.5], [77.5, 31.5], [77.5, 29.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "West Bengal"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[86.0, 21.5], [89.0, 21.5], [89.0, 27.0], [86.0, 27.0], [86.0, 21.5]]]
+      }
+    }
+  ]
+}
