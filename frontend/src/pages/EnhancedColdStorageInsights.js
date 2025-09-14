@@ -13,6 +13,7 @@ import {
   Autocomplete
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const EnhancedColdStorageInsights = () => {
   const [loading, setLoading] = useState(false);
@@ -90,7 +91,50 @@ const EnhancedColdStorageInsights = () => {
     { NameofProject: "GANGAA COLD STORAGE", latitude: 17.9802, longitude: 79.5957, StateName: "Telangana", DistrictName: "Warangal" },
     { NameofProject: "SRI KRISHNA COLD STORAGE", latitude: 17.2433, longitude: 80.1385, StateName: "Telangana", DistrictName: "Khammam" },
     { NameofProject: "SRI PEDDAMMA COLD STORAGE LLP", latitude: 16.9549, longitude: 80.0444, StateName: "Telangana", DistrictName: "Nalgonda" },
-    { NameofProject: "SREE HARSHA COLD STORAGE", latitude: 16.8186, longitude: 80.0296, StateName: "Telangana", DistrictName: "Nalgonda" }
+    { NameofProject: "SREE HARSHA COLD STORAGE", latitude: 16.8186, longitude: 80.0296, StateName: "Telangana", DistrictName: "Nalgonda" },
+    
+    // Adding missing major states
+    { NameofProject: "MAHARASHTRA COLD STORAGE", latitude: 19.0760, longitude: 72.8777, StateName: "Maharashtra", DistrictName: "Mumbai" },
+    { NameofProject: "MUMBASIC COLD CHAIN", latitude: 18.5204, longitude: 73.8567, StateName: "Maharashtra", DistrictName: "Pune" },
+    { NameofProject: "NAGPUR FRESH FOODS", latitude: 21.1458, longitude: 79.0882, StateName: "Maharashtra", DistrictName: "Nagpur" },
+    
+    { NameofProject: "BENGAL COLD SOLUTIONS", latitude: 22.5726, longitude: 88.3639, StateName: "West Bengal", DistrictName: "Kolkata" },
+    { NameofProject: "DURGAPUR COOL CHAIN", latitude: 23.5204, longitude: 87.3119, StateName: "West Bengal", DistrictName: "Durgapur" },
+    
+    { NameofProject: "HYDERABAD COLD STORAGE", latitude: 17.3850, longitude: 78.4867, StateName: "Telangana", DistrictName: "Hyderabad" },
+    
+    { NameofProject: "PATNA COOL SOLUTIONS", latitude: 25.5941, longitude: 85.1376, StateName: "Bihar", DistrictName: "Patna" },
+    { NameofProject: "GAYA COLD CHAIN", latitude: 24.7914, longitude: 84.9994, StateName: "Bihar", DistrictName: "Gaya" },
+    
+    { NameofProject: "BHUBANESWAR COLD STORAGE", latitude: 20.2961, longitude: 85.8245, StateName: "Odisha", DistrictName: "Bhubaneswar" },
+    { NameofProject: "CUTTACK COOL CHAIN", latitude: 20.4625, longitude: 85.8830, StateName: "Odisha", DistrictName: "Cuttack" },
+    
+    { NameofProject: "AHMEDABAD COLD STORAGE", latitude: 23.0225, longitude: 72.5714, StateName: "Gujarat", DistrictName: "Ahmedabad" },
+    { NameofProject: "SURAT COLD CHAIN SOLUTIONS", latitude: 21.1702, longitude: 72.8311, StateName: "Gujarat", DistrictName: "Surat" },
+    { NameofProject: "VADODARA FRESH FOODS", latitude: 22.3072, longitude: 73.1812, StateName: "Gujarat", DistrictName: "Vadodara" },
+    
+    { NameofProject: "NORTH EAST COLD STORAGE", latitude: 26.1158, longitude: 91.7086, StateName: "Assam", DistrictName: "Guwahati" },
+    { NameofProject: "ASSAM FOOD PRESERVATION", latitude: 26.7509, longitude: 94.2037, StateName: "Assam", DistrictName: "Jorhat" },
+    
+    { NameofProject: "BHOPAL COLD CHAIN", latitude: 23.2599, longitude: 77.4126, StateName: "Madhya Pradesh", DistrictName: "Bhopal" },
+    { NameofProject: "INDORE FRESH FOODS", latitude: 22.7196, longitude: 75.8577, StateName: "Madhya Pradesh", DistrictName: "Indore" },
+    
+    { NameofProject: "TRIVANDRUM COLD STORAGE", latitude: 8.5241, longitude: 76.9366, StateName: "Kerala", DistrictName: "Thiruvananthapuram" },
+    { NameofProject: "KOCHI COOL SOLUTIONS", latitude: 9.9312, longitude: 76.2673, StateName: "Kerala", DistrictName: "Ernakulam" },
+    
+    { NameofProject: "DELHI COLD CHAIN", latitude: 28.7041, longitude: 77.1025, StateName: "Delhi", DistrictName: "New Delhi" },
+    { NameofProject: "NATIONAL CAPITAL COLD STORAGE", latitude: 28.6139, longitude: 77.2090, StateName: "Delhi", DistrictName: "New Delhi" },
+    
+    { NameofProject: "ANDHRA COLD STORAGE", latitude: 16.5062, longitude: 80.6480, StateName: "Andhra Pradesh", DistrictName: "Vijayawada" },
+    { NameofProject: "VIZAG COLD CHAIN", latitude: 17.6868, longitude: 83.2185, StateName: "Andhra Pradesh", DistrictName: "Visakhapatnam" },
+    
+    { NameofProject: "CHANDIGARH COOL SOLUTIONS", latitude: 30.7333, longitude: 76.7794, StateName: "Chandigarh", DistrictName: "Chandigarh" },
+    
+    { NameofProject: "GOA COLD STORAGE", latitude: 15.2993, longitude: 74.1240, StateName: "Goa", DistrictName: "North Goa" },
+    { NameofProject: "SOUTH GOA PRESERVATION", latitude: 15.3911, longitude: 73.8163, StateName: "Goa", DistrictName: "South Goa" },
+    
+    { NameofProject: "JAIPUR COLD SOLUTIONS", latitude: 26.9124, longitude: 75.7873, StateName: "Rajasthan", DistrictName: "Jaipur" },
+    { NameofProject: "JODHPUR FRESH FOODS", latitude: 26.2389, longitude: 73.0243, StateName: "Rajasthan", DistrictName: "Jodhpur" }
   ], []);
 
   // Load state options on initial render
@@ -126,7 +170,7 @@ const EnhancedColdStorageInsights = () => {
                 Cold Storage Facilities Across India
               </Typography>
               <Typography variant="body1">
-                Search for cold storage facilities by state to view facility names and their locations.
+                Search for cold storage facilities by state. Click on any facility to view its exact location on Google Maps.
               </Typography>
             </Grid>
             <Grid item xs={12} md={4}>
@@ -170,12 +214,25 @@ const EnhancedColdStorageInsights = () => {
                 <Typography variant="h5" gutterBottom>
                   {selectedState} - Cold Storage Facilities ({facilitiesData.length})
                 </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  Click on any facility card to view its location on Google Maps
+                </Typography>
                 
                 {facilitiesData.length > 0 ? (
                   <Grid container spacing={3}>
                     {facilitiesData.map((facility, index) => (
                       <Grid item xs={12} sm={6} md={4} key={index}>
-                        <Card sx={{ height: '100%' }}>
+                        <Card 
+                          sx={{ 
+                            height: '100%', 
+                            '&:hover': { 
+                              boxShadow: 6,
+                              cursor: 'pointer',
+                              bgcolor: '#f5f5f5'
+                            } 
+                          }}
+                          onClick={() => window.open(`https://www.google.com/maps?q=${facility.latitude},${facility.longitude}`, '_blank', 'noopener,noreferrer')}
+                        >
                           <CardContent>
                             <Typography variant="h6" gutterBottom>
                               {facility.NameofProject}
@@ -183,6 +240,12 @@ const EnhancedColdStorageInsights = () => {
                             <Typography variant="body2" color="text.secondary">
                               {facility.DistrictName}
                             </Typography>
+                            <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', color: '#1976d2' }}>
+                              <LocationOnIcon fontSize="small" sx={{ mr: 0.5 }} />
+                              <Typography variant="button">
+                                View on Google Maps
+                              </Typography>
+                            </Box>
                           </CardContent>
                         </Card>
                       </Grid>
