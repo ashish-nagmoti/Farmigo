@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Container, 
   Typography, 
@@ -9,169 +9,153 @@ import {
   CardContent,
   TextField,
   InputAdornment,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Divider,
   CircularProgress,
   Autocomplete
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 const EnhancedColdStorageInsights = () => {
-  const [loading, setLoading] = useState(true);
-  const [storageData, setStorageData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [selectedState, setSelectedState] = useState('');
-  const [filteredData, setFilteredData] = useState([]);
   const [stateOptions, setStateOptions] = useState([]);
+  const [facilitiesData, setFacilitiesData] = useState([]);
   
-  // Simulating data loading from CSV
+  // GeoData from GeoIndiaHandlerGis.ashx - sample of cold storage facilities with location data
+  const geoData = useMemo(() => [
+    { NameofProject: "ESS EMM GEE ICE FACTORY & COLD STORAGE", latitude: 32.6475, longitude: 74.9432, StateName: "Jammu & Kashmir", DistrictName: "Jammu" },
+    { NameofProject: "SNOW VALLEY COLD CHAIN", latitude: 32.6412, longitude: 74.9386, StateName: "Jammu & Kashmir", DistrictName: "Samba" },
+    { NameofProject: "AL NOOR AGRI  FRESH PVT. LTD.", latitude: 33.808852, longitude: 74.933234, StateName: "Jammu & Kashmir", DistrictName: "Pulwama" },
+    { NameofProject: "AMAR COLD STORAGE", latitude: 32.7142, longitude: 74.8935, StateName: "Jammu & Kashmir", DistrictName: "Jammu" },
+    { NameofProject: "HIGHLAND INDUSTRIES", latitude: 32.6469, longitude: 74.9423, StateName: "Jammu & Kashmir", DistrictName: "Jammu" },
+    { NameofProject: "BAHU COLD STORAGE & ICE FACTORY (P) LTD.", latitude: 32.7146, longitude: 74.8809, StateName: "Jammu & Kashmir", DistrictName: "Jammu" },
+    { NameofProject: "COMAL AGROFOODS LIMITED", latitude: 29.9216, longitude: 75.3922, StateName: "Himachal Pradesh", DistrictName: "Una" },
+    { NameofProject: "DEV BHUMI COLD CHAIN LTD", latitude: 31.2109, longitude: 77.4057, StateName: "Himachal Pradesh", DistrictName: "Shimla" },
+    { NameofProject: "SHIV SHANKAR COLD STORE", latitude: 31.4681, longitude: 76.2435, StateName: "Himachal Pradesh", DistrictName: "Una" },
+    { NameofProject: "HORTITECH FOODS", latitude: 30.9128, longitude: 76.8297, StateName: "Himachal Pradesh", DistrictName: "Solan" },
+    { NameofProject: "ZIRA FOODS", latitude: 31.3442, longitude: 76.2427, StateName: "Himachal Pradesh", DistrictName: "Una" },
+    { NameofProject: "SHIVIN C.A. STORE", latitude: 30.7547, longitude: 76.6731, StateName: "Himachal Pradesh", DistrictName: "Shimla" },
+    { NameofProject: "BIJA POULTRY FARM PVT. LTD.", latitude: 31.3462, longitude: 77.4998, StateName: "Himachal Pradesh", DistrictName: "Shimla" },
+    { NameofProject: "ANUBHUTI LOGISTICS PVT. LTD.", latitude: 30.613, longitude: 76.8706, StateName: "Punjab", DistrictName: "Mohali" },
+    { NameofProject: "GMH AGRIHUB (SOLE PROPRIETOR-GURMIT SINGH)", latitude: 30.9323, longitude: 75.4916, StateName: "Punjab", DistrictName: "Ludhiana" },
+    { NameofProject: "SAKSHI FRUITS & VEGETABLE COLD STORE", latitude: 31.6316, longitude: 74.957, StateName: "Punjab", DistrictName: "Amritsar" },
+    { NameofProject: "LALLY COLD STORAGE", latitude: 31.4554, longitude: 75.4565, StateName: "Punjab", DistrictName: "Kapurthala" },
+    { NameofProject: "CHEEMA COLD STORE", latitude: 30.7085, longitude: 75.7891, StateName: "Punjab", DistrictName: "Ludhiana" },
+    { NameofProject: "SATGUR COLD STORAGE (PROP : KULWINDER SINGH)", latitude: 31.2396, longitude: 75.5001, StateName: "Punjab", DistrictName: "Jalandhar" },
+    { NameofProject: "MATTA COLD STORAGE", latitude: 30.597, longitude: 74.8085, StateName: "Punjab", DistrictName: "Faridkot" },
+    { NameofProject: "SHANKAR COLD STORES", latitude: 29.9868, longitude: 76.0534, StateName: "Punjab", DistrictName: "Patiala" },
+    { NameofProject: "KARTAR COLD STORE", latitude: 30.7786, longitude: 75.4842, StateName: "Punjab", DistrictName: "Ludhiana" },
+    { NameofProject: "UPPAL AGROFRESH (INDIA) PVT. LTD.", latitude: 30.4901, longitude: 76.8653, StateName: "Punjab", DistrictName: "Mohali" },
+    { NameofProject: "MALWA FRESH FOODS", latitude: 30.2603, longitude: 75.2625, StateName: "Punjab", DistrictName: "Bathinda" },
+    { NameofProject: "SUKHJIT COLD STORAGE (PROP: S.SUKHJIT SINGH BHATTI", latitude: 31.2742, longitude: 75.5775, StateName: "Punjab", DistrictName: "Jalandhar" },
+    { NameofProject: "FRIENDS COLD STORAGE", latitude: 30.791, longitude: 76.2039, StateName: "Punjab", DistrictName: "Ludhiana" },
+    { NameofProject: "SAKSHI FRUIT & VEG. COLD STORE (PROP:RAMAN GUPTA)", latitude: 31.6316, longitude: 74.957, StateName: "Punjab", DistrictName: "Amritsar" },
+    { NameofProject: "ARYAVARTA COOL CHAIN", latitude: 30.6125, longitude: 76.8696, StateName: "Punjab", DistrictName: "Mohali" },
+    { NameofProject: "GUPTA COLD STORAGE", latitude: 30.0903, longitude: 75.2277, StateName: "Punjab", DistrictName: "Jalandhar" },
+    { NameofProject: "SAROJ OVERSEAS PVT. LTD.", latitude: 28.9092, longitude: 77.064, StateName: "Haryana", DistrictName: "Sonipat" },
+    { NameofProject: "HARSHNA ICE & COLD STORAGE PVT. LTD.", latitude: 28.8974, longitude: 77.1066, StateName: "Haryana", DistrictName: "Sonipat" },
+    { NameofProject: "ASSAM TRADING COMPANY", latitude: 29.0044, longitude: 77.02, StateName: "Haryana", DistrictName: "Sonipat" },
+    { NameofProject: "ISHWAR COLD STORE", latitude: 28.8934, longitude: 77.1036, StateName: "Haryana", DistrictName: "Sonipat" },
+    { NameofProject: "MRIGESH AGRO & COLD STORAGE PVT. LTD.", latitude: 28.8771, longitude: 77.1048, StateName: "Haryana", DistrictName: "Sonipat" },
+    { NameofProject: "R.S FREEZING & COOLING CHAMBERS PVT. LTD.", latitude: 28.8896, longitude: 77.0982, StateName: "Haryana", DistrictName: "Sonipat" },
+    { NameofProject: "FLEX FOODS LIMITED", latitude: 30.127924, longitude: 78.166084, StateName: "Uttrakhand", DistrictName: "Dehradun" },
+    { NameofProject: "ANNAPURNA COLD STORAGE & ICE FACTORY", latitude: 29.010714, longitude: 79.382895, StateName: "Uttrakhand", DistrictName: "Udham Singh Nagar" },
+    { NameofProject: "SHRI JI COLD STORAGE", latitude: 26.9632, longitude: 76.7223, StateName: "Rajasthan", DistrictName: "Bharatpur" },
+    { NameofProject: "SHRI POONRASAR ENTERPRISES PRIVATE LIMITED", latitude: 28.0562, longitude: 73.2967, StateName: "Rajasthan", DistrictName: "Bikaner" },
+    { NameofProject: "STERLITE AGRO LIMITED", latitude: 25.2616, longitude: 74.6392, StateName: "Rajasthan", DistrictName: "Bhilwara" },
+    { NameofProject: "SRI GAJANAND SHEETGRAH PRIVATE LIMITED", latitude: 26.8996715, longitude: 77.7882963, StateName: "Rajasthan", DistrictName: "Dhaulpur" },
+    { NameofProject: "PRATAP COLD STORAGE PVT. LTD.", latitude: 26.7821092, longitude: 77.7947313, StateName: "Rajasthan", DistrictName: "Dhaulpur" },
+    { NameofProject: "MAA KAILA DEVI COLD STORAGE", latitude: 26.7345529, longitude: 77.8940347, StateName: "Rajasthan", DistrictName: "Dhaulpur" },
+    { NameofProject: "RAM RAGHU SHEETGRAH PVT. LTD.", latitude: 27.16, longitude: 78.16, StateName: "Uttar Pradesh", DistrictName: "Firozabad" },
+    { NameofProject: "KALESHWAR COLD STORAGE PVT. LTD.", latitude: 27.12, longitude: 78.14, StateName: "Uttar Pradesh", DistrictName: "Faizabad" },
+    { NameofProject: "GOLDEN COLD STORAGE", latitude: 27.098, longitude: 80.9458, StateName: "Uttar Pradesh", DistrictName: "Lucknow" },
+    { NameofProject: "M. D. FRESH VEG PVT. LTD.", latitude: 27.8156, longitude: 78.0209, StateName: "Uttar Pradesh", DistrictName: "Aligarh" },
+    { NameofProject: "SINGH ICE & PRESERVATION (P) LTD.", latitude: 26.6416, longitude: 80.4564, StateName: "Uttar Pradesh", DistrictName: "Unnao" },
+    { NameofProject: "NANDINI COLD STORAGE", latitude: 13.25, longitude: 77.55, StateName: "Karnataka", DistrictName: "Bangalore" },
+    { NameofProject: "DAIMAND COLD STORAGE", latitude: 12.96, longitude: 77.6, StateName: "Karnataka", DistrictName: "Bangalore" },
+    { NameofProject: "ARUN MILK PRODUCTS", latitude: 13.24, longitude: 77.55, StateName: "Karnataka", DistrictName: "Bangalore" },
+    { NameofProject: "KALPAKA COLD STORAGE", latitude: 13.0, longitude: 77.61, StateName: "Karnataka", DistrictName: "Bangalore" },
+    { NameofProject: "KARNATAKA COLD STORAGE PVT LTD", latitude: 12.94, longitude: 77.57, StateName: "Karnataka", DistrictName: "Bangalore" },
+    { NameofProject: "NANDHI COLD STORAGE", latitude: 12.98, longitude: 78.07, StateName: "Karnataka", DistrictName: "Bangalore" },
+    { NameofProject: "SNOWMAN FROZEN FOODS.LTD", latitude: 12.97, longitude: 77.59, StateName: "Karnataka", DistrictName: "Bangalore" },
+    { NameofProject: "SRI RAGAVEDRA COLD STOREGE", latitude: 13.03, longitude: 77.54, StateName: "Karnataka", DistrictName: "Bangalore" },
+    { NameofProject: "PARAYIL FOOD PRODUCTS PVT LTD", latitude: 9.88564, longitude: 76.2971, StateName: "Kerala", DistrictName: "Alappuzha" },
+    { NameofProject: "N.S. RATHINAM AND SONS PRIVATE LIMITED", latitude: 10.4531, longitude: 77.9469, StateName: "Tamil Nadu", DistrictName: "Dindigul" },
+    { NameofProject: "SNOWFIELD (PARTNERSHIP FIRM)", latitude: 13.0571, longitude: 80.1439, StateName: "Tamil Nadu", DistrictName: "Thiruvallur" },
+    { NameofProject: "LAKSHMI SAAI AGRI COLD STORAGE PVT. LTD.", latitude: 13.2751, longitude: 80.1507, StateName: "Tamil Nadu", DistrictName: "Thiruvallur" },
+    { NameofProject: "MAGGI COLD STORAGE PRIVATE LIMITED", latitude: 13.1803, longitude: 80.21, StateName: "Tamil Nadu", DistrictName: "Thiruvallur" },
+    { NameofProject: "DHIRA COLD STORAGE PRIVATE LIMITED", latitude: 9.96259, longitude: 78.0413, StateName: "Tamil Nadu", DistrictName: "Madurai" },
+    { NameofProject: "ANTARRTICA, PROP-D.V. KARUNAKAR", latitude: 13.0372, longitude: 80.0435, StateName: "Tamil Nadu", DistrictName: "Thiruvallur" },
+    { NameofProject: "GOPAL KRISHNA COLD STORAGES", latitude: 13.0551, longitude: 80.0572, StateName: "Tamil Nadu", DistrictName: "Thiruvallur" },
+    { NameofProject: "SAI SRINIVASA COLD STORAGE", latitude: 17.252, longitude: 80.1395, StateName: "Telangana", DistrictName: "Khammam" },
+    { NameofProject: "GANGAA COLD STORAGE", latitude: 17.9802, longitude: 79.5957, StateName: "Telangana", DistrictName: "Warangal" },
+    { NameofProject: "SRI KRISHNA COLD STORAGE", latitude: 17.2433, longitude: 80.1385, StateName: "Telangana", DistrictName: "Khammam" },
+    { NameofProject: "SRI PEDDAMMA COLD STORAGE LLP", latitude: 16.9549, longitude: 80.0444, StateName: "Telangana", DistrictName: "Nalgonda" },
+    { NameofProject: "SREE HARSHA COLD STORAGE", latitude: 16.8186, longitude: 80.0296, StateName: "Telangana", DistrictName: "Nalgonda" }
+  ], []);
+
+  // Load state options on initial render
   useEffect(() => {
-    // This would normally be an API call to load the CSV data
-    // For now, we'll create some mock data based on the CSV structure
-    const mockDataFromCSV = [
-      {
-        state: 'Andhra Pradesh',
-        projects: 27,
-        capacity: 179281,
-        availableCapacity: 43000,
-        temperature: '2-4°C',
-        humidity: '85-90%',
-        costPerUnit: 'Rs. 350 per ton/month',
-        facilities: [
-          { name: 'AP Cold Storage Hub', location: 'Vijayawada', capacity: 45000, available: 12000, temp: '2°C' },
-          { name: 'Coastal Preservation Center', location: 'Rajahmundry', capacity: 35000, available: 8000, temp: '3°C' },
-          { name: 'Krishna Valley Storage', location: 'Guntur', capacity: 52000, available: 15000, temp: '4°C' },
-          { name: 'Godavari Cooling Systems', location: 'Kakinada', capacity: 47281, available: 8000, temp: '2°C' }
-        ]
-      },
-      {
-        state: 'Gujarat',
-        projects: 205,
-        capacity: 925058,
-        availableCapacity: 230000,
-        temperature: '0-5°C',
-        humidity: '80-90%',
-        costPerUnit: 'Rs. 320 per ton/month',
-        facilities: [
-          { name: 'Ahmedabad Cold Chain', location: 'Ahmedabad', capacity: 155000, available: 42000, temp: '2°C' },
-          { name: 'Surat Fresh Storage', location: 'Surat', capacity: 125000, available: 38000, temp: '1°C' },
-          { name: 'Kutch Cold Systems', location: 'Bhuj', capacity: 95000, available: 25000, temp: '0°C' },
-          { name: 'Vadodara Preservation Hub', location: 'Vadodara', capacity: 118000, available: 35000, temp: '3°C' }
-        ]
-      },
-      {
-        state: 'Punjab',
-        projects: 57,
-        capacity: 267231,
-        availableCapacity: 78000,
-        temperature: '1-4°C',
-        humidity: '85-92%',
-        costPerUnit: 'Rs. 380 per ton/month',
-        facilities: [
-          { name: 'Amritsar Cold Hub', location: 'Amritsar', capacity: 65000, available: 18000, temp: '2°C' },
-          { name: 'Ludhiana Storage Center', location: 'Ludhiana', capacity: 72000, available: 22000, temp: '3°C' },
-          { name: 'Jalandhar Cold Chain', location: 'Jalandhar', capacity: 53000, available: 15000, temp: '1°C' },
-          { name: 'Patiala Fresh Storage', location: 'Patiala', capacity: 58000, available: 21000, temp: '2°C' }
-        ]
-      },
-      {
-        state: 'Uttar Pradesh',
-        projects: 127,
-        capacity: 635152,
-        availableCapacity: 185000,
-        temperature: '1-5°C',
-        humidity: '80-90%',
-        costPerUnit: 'Rs. 310 per ton/month',
-        facilities: [
-          { name: 'Lucknow Cold Systems', location: 'Lucknow', capacity: 125000, available: 35000, temp: '3°C' },
-          { name: 'Kanpur Storage Hub', location: 'Kanpur', capacity: 135000, available: 42000, temp: '2°C' },
-          { name: 'Agra Fresh Preservation', location: 'Agra', capacity: 98000, available: 28000, temp: '1°C' },
-          { name: 'Varanasi Cold Chain', location: 'Varanasi', capacity: 105000, available: 32000, temp: '2°C' }
-        ]
-      },
-      {
-        state: 'Himachal Pradesh',
-        projects: 10,
-        capacity: 23025,
-        availableCapacity: 8500,
-        temperature: '0-4°C',
-        humidity: '85-95%',
-        costPerUnit: 'Rs. 400 per ton/month',
-        facilities: [
-          { name: 'Shimla Apple Storage', location: 'Shimla', capacity: 8500, available: 2500, temp: '1°C' },
-          { name: 'Kullu Valley Cold Hub', location: 'Kullu', capacity: 7200, available: 3000, temp: '0°C' },
-          { name: 'Mandi Preservation Center', location: 'Mandi', capacity: 4800, available: 1800, temp: '2°C' },
-          { name: 'Solan Fruit Storage', location: 'Solan', capacity: 2525, available: 1200, temp: '1°C' }
-        ]
-      },
-      {
-        state: 'Karnataka',
-        projects: 19,
-        capacity: 106011,
-        availableCapacity: 32000,
-        temperature: '2-6°C',
-        humidity: '80-90%',
-        costPerUnit: 'Rs. 360 per ton/month',
-        facilities: [
-          { name: 'Bangalore Fresh Storage', location: 'Bangalore', capacity: 35000, available: 9500, temp: '4°C' },
-          { name: 'Mysore Cold Systems', location: 'Mysore', capacity: 28000, available: 7800, temp: '3°C' },
-          { name: 'Mangalore Coastal Storage', location: 'Mangalore', capacity: 22000, available: 6500, temp: '2°C' },
-          { name: 'Hubli Preservation Hub', location: 'Hubli', capacity: 21011, available: 8200, temp: '4°C' }
-        ]
-      }
-    ];
-    
-    // Simulate loading delay
-    setTimeout(() => {
-      setStorageData(mockDataFromCSV);
-      setFilteredData(mockDataFromCSV);
-      
-      // Extract state options for dropdown
-      const states = mockDataFromCSV.map(item => item.state);
-      setStateOptions(states);
-      
-      setLoading(false);
-    }, 1000);
-  }, []);
+    // Extract unique state names from geoData
+    const uniqueStates = [...new Set(geoData.map(facility => facility.StateName))];
+    setStateOptions(uniqueStates.sort());
+    setLoading(false);
+  }, [geoData]);
   
-  // Handle state selection
-  const handleStateChange = (event, newValue) => {
-    setSelectedState(newValue);
-    
-    if (newValue) {
-      const filtered = storageData.filter(item => item.state === newValue);
-      setFilteredData(filtered);
+  // Update facilities when state is selected
+  useEffect(() => {
+    if (selectedState) {
+      // Filter facilities data based on selected state
+      const filteredFacilities = geoData.filter(facility => facility.StateName === selectedState);
+      setFacilitiesData(filteredFacilities);
     } else {
-      setFilteredData(storageData);
+      setFacilitiesData([]);
     }
-  };
-  
-  // Calculate total available capacity
-  const totalAvailableCapacity = filteredData.reduce((sum, item) => sum + item.availableCapacity, 0);
-  
+  }, [selectedState, geoData]);
+
   return (
     <Container maxWidth="xl">
       <Box sx={{ pt: 3, pb: 6 }}>
         <Typography variant="h4" gutterBottom>
-          Cold Storage Insights
+          Cold Storage Facilities Search
         </Typography>
         
         <Paper sx={{ p: 3, mb: 4, bgcolor: '#e8f5e9' }}>
-          <Typography variant="h6" gutterBottom>
-            Cold Storage Facilities Across India
-          </Typography>
-          <Typography variant="body1">
-            Find and analyze cold storage facilities with real-time monitoring of capacity, temperature, and availability.
-            Data sourced from official agricultural records.
-          </Typography>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} md={8}>
+              <Typography variant="h6">
+                Cold Storage Facilities Across India
+              </Typography>
+              <Typography variant="body1">
+                Search for cold storage facilities by state to view facility names and their locations.
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Autocomplete
+                options={stateOptions}
+                value={selectedState}
+                onChange={(event, newValue) => setSelectedState(newValue)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Search by State"
+                    variant="outlined"
+                    fullWidth
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        <>
+                          <InputAdornment position="start">
+                            <SearchIcon />
+                          </InputAdornment>
+                          {params.InputProps.startAdornment}
+                        </>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+          </Grid>
         </Paper>
         
         {loading ? (
@@ -180,135 +164,40 @@ const EnhancedColdStorageInsights = () => {
           </Box>
         ) : (
           <>
-            {/* Search and Filter Section */}
-            <Paper sx={{ p: 3, mb: 4 }}>
-              <Grid container spacing={3} alignItems="center">
-                <Grid item xs={12} md={6}>
-                  <Autocomplete
-                    options={stateOptions}
-                    value={selectedState}
-                    onChange={handleStateChange}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Search by State"
-                        variant="outlined"
-                        fullWidth
-                        InputProps={{
-                          ...params.InputProps,
-                          startAdornment: (
-                            <>
-                              <InputAdornment position="start">
-                                <SearchIcon />
-                              </InputAdornment>
-                              {params.InputProps.startAdornment}
-                            </>
-                          ),
-                        }}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Box sx={{ textAlign: { xs: 'left', md: 'right' } }}>
-                    <Typography variant="h6" color="primary">
-                      Available Capacity: {totalAvailableCapacity.toLocaleString()} tons
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Across {filteredData.length} states and {filteredData.reduce((sum, item) => sum + item.projects, 0)} facilities
-                    </Typography>
-                  </Box>
-                </Grid>
-              </Grid>
-            </Paper>
-            
-            {/* State-wise Storage Overview */}
-            <Typography variant="h5" gutterBottom sx={{ mt: 4, mb: 2 }}>
-              {selectedState ? `${selectedState} Cold Storage Facilities` : 'State-wise Cold Storage Overview'}
-            </Typography>
-            
-            {filteredData.length === 0 ? (
-              <Paper sx={{ p: 4, textAlign: 'center' }}>
-                <Typography variant="h6" color="text.secondary">
-                  No cold storage facilities found for the selected criteria.
+            {/* Display facilities for selected state */}
+            {selectedState ? (
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="h5" gutterBottom>
+                  {selectedState} - Cold Storage Facilities ({facilitiesData.length})
                 </Typography>
-              </Paper>
-            ) : (
-              <>
-                {/* Summary Table */}
-                <TableContainer component={Paper} sx={{ mb: 4 }}>
-                  <Table>
-                    <TableHead sx={{ bgcolor: '#f5f5f5' }}>
-                      <TableRow>
-                        <TableCell><Typography fontWeight="bold">State</Typography></TableCell>
-                        <TableCell align="right"><Typography fontWeight="bold">Total Projects</Typography></TableCell>
-                        <TableCell align="right"><Typography fontWeight="bold">Total Capacity (tons)</Typography></TableCell>
-                        <TableCell align="right"><Typography fontWeight="bold">Available Capacity (tons)</Typography></TableCell>
-                        <TableCell align="right"><Typography fontWeight="bold">Avg. Temperature</Typography></TableCell>
-                        <TableCell align="right"><Typography fontWeight="bold">Cost</Typography></TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {filteredData.map((item) => (
-                        <TableRow key={item.state}>
-                          <TableCell component="th" scope="row">
-                            <Typography fontWeight="medium">{item.state}</Typography>
-                          </TableCell>
-                          <TableCell align="right">{item.projects}</TableCell>
-                          <TableCell align="right">{item.capacity.toLocaleString()}</TableCell>
-                          <TableCell align="right">{item.availableCapacity.toLocaleString()}</TableCell>
-                          <TableCell align="right">{item.temperature}</TableCell>
-                          <TableCell align="right">{item.costPerUnit}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
                 
-                {/* Detailed Facilities */}
-                {filteredData.map((stateData) => (
-                  <Box key={stateData.state} sx={{ mb: 5 }}>
-                    <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Box component="span" sx={{ width: 12, height: 12, bgcolor: 'primary.main', borderRadius: '50%', mr: 1 }}></Box>
-                      {stateData.state} - Available Facilities
-                    </Typography>
-                    
-                    <Grid container spacing={3}>
-                      {stateData.facilities.map((facility, idx) => (
-                        <Grid item xs={12} sm={6} md={3} key={idx}>
-                          <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                            <CardContent sx={{ flexGrow: 1 }}>
-                              <Typography variant="h6" gutterBottom>
-                                {facility.name}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary" gutterBottom>
-                                {facility.location}
-                              </Typography>
-                              <Divider sx={{ my: 1.5 }} />
-                              <Box sx={{ mt: 2 }}>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                                  <Typography variant="body2">Total Capacity:</Typography>
-                                  <Typography variant="body2" fontWeight="bold">{facility.capacity.toLocaleString()} tons</Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                                  <Typography variant="body2">Available Space:</Typography>
-                                  <Typography variant="body2" fontWeight="bold" color="success.main">
-                                    {facility.available.toLocaleString()} tons
-                                  </Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                  <Typography variant="body2">Temperature:</Typography>
-                                  <Typography variant="body2" fontWeight="bold">{facility.temp}</Typography>
-                                </Box>
-                              </Box>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </Box>
-                ))}
-              </>
+                {facilitiesData.length > 0 ? (
+                  <Grid container spacing={3}>
+                    {facilitiesData.map((facility, index) => (
+                      <Grid item xs={12} sm={6} md={4} key={index}>
+                        <Card sx={{ height: '100%' }}>
+                          <CardContent>
+                            <Typography variant="h6" gutterBottom>
+                              {facility.NameofProject}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {facility.DistrictName}
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
+                  </Grid>
+                ) : (
+                  <Typography variant="body1" align="center" color="text.secondary" sx={{ mt: 4 }}>
+                    No facilities found for {selectedState}.
+                  </Typography>
+                )}
+              </Box>
+            ) : (
+              <Typography variant="body1" align="center" color="text.secondary" sx={{ mt: 4 }}>
+                Please select a state to view cold storage facilities.
+              </Typography>
             )}
           </>
         )}

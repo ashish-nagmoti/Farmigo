@@ -1,0 +1,781 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Container, 
+  Typography, 
+  Box, 
+  Paper, 
+  Grid, 
+  Card, 
+  CardContent,
+  TextField,
+  InputAdornment,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Divider,
+  CircularProgress,
+  Autocomplete,
+  ToggleButtonGroup,
+  ToggleButton
+} from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import { Bar } from 'react-chartjs-2';
+import { 
+  Chart as ChartJS, 
+  CategoryScale, 
+  LinearScale, 
+  BarElement, 
+  Title, 
+  Tooltip as ChartTooltip, 
+  Legend 
+} from 'chart.js';
+
+// Register Chart.js components
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, ChartTooltip, Legend);
+
+const EnhancedColdStorageInsights = () => {
+  const [loading, setLoading] = useState(true);
+  const [storageData, setStorageData] = useState([]);
+  const [selectedState, setSelectedState] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
+  const [stateOptions, setStateOptions] = useState([]);
+  const [viewType, setViewType] = useState('chart'); // 'chart' or 'table'
+  const [dataMetric, setDataMetric] = useState('capacity'); // 'capacity' or 'projects'
+  const [yearView, setYearView] = useState('total'); // 'total', '2017-18', '2018-19', etc.
+  
+  // The CSV data processed into a structured format
+  const csvData = [
+    { 
+      state: "Andhra Pradesh", 
+      projects2017: 2, capacity2017: 14760,
+      projects2018: 2, capacity2018: 17357,
+      projects2019: 5, capacity2019: 57164,
+      projects2020: 0, capacity2020: 0,
+      projects2021: 18, capacity2021: 90000,
+      totalProjects: 27, totalCapacity: 179281 
+    },
+    { 
+      state: "Assam", 
+      projects2017: 0, capacity2017: 0,
+      projects2018: 2, capacity2018: 15200,
+      projects2019: 1, capacity2019: 10000,
+      projects2020: 1, capacity2020: 9000,
+      projects2021: 0, capacity2021: 0,
+      totalProjects: 4, totalCapacity: 34200 
+    },
+    { 
+      state: "Bihar", 
+      projects2017: 0, capacity2017: 0,
+      projects2018: 3, capacity2018: 22172,
+      projects2019: 0, capacity2019: 0,
+      projects2020: 0, capacity2020: 0,
+      projects2021: 0, capacity2021: 0,
+      totalProjects: 3, totalCapacity: 22172 
+    },
+    { 
+      state: "Chhattisgarh", 
+      projects2017: 0, capacity2017: 0,
+      projects2018: 1, capacity2018: 3243,
+      projects2019: 0, capacity2019: 0,
+      projects2020: 0, capacity2020: 0,
+      projects2021: 0, capacity2021: 0,
+      totalProjects: 1, totalCapacity: 3243 
+    },
+    { 
+      state: "Gujarat", 
+      projects2017: 116, capacity2017: 564289,
+      projects2018: 68, capacity2018: 289567,
+      projects2019: 12, capacity2019: 33964,
+      projects2020: 1, capacity2020: 3452,
+      projects2021: 8, capacity2021: 33786,
+      totalProjects: 205, totalCapacity: 925058 
+    },
+    { 
+      state: "Haryana", 
+      projects2017: 9, capacity2017: 31554,
+      projects2018: 4, capacity2018: 10890,
+      projects2019: 0, capacity2019: 0,
+      projects2020: 0, capacity2020: 0,
+      projects2021: 2, capacity2021: 16064,
+      totalProjects: 15, totalCapacity: 58508 
+    },
+    { 
+      state: "Himachal Pradesh", 
+      projects2017: 0, capacity2017: 0,
+      projects2018: 9, capacity2018: 16657,
+      projects2019: 0, capacity2019: 0,
+      projects2020: 1, capacity2020: 6368,
+      projects2021: 0, capacity2021: 0,
+      totalProjects: 10, totalCapacity: 23025 
+    },
+    { 
+      state: "Jammu and Kashmir", 
+      projects2017: 17, capacity2017: 72109,
+      projects2018: 3, capacity2018: 15094,
+      projects2019: 5, capacity2019: 24981,
+      projects2020: 7, capacity2020: 32163,
+      projects2021: 0, capacity2021: 0,
+      totalProjects: 32, totalCapacity: 144347 
+    },
+    { 
+      state: "Karnataka", 
+      projects2017: 7, capacity2017: 21877,
+      projects2018: 5, capacity2018: 26346,
+      projects2019: 6, capacity2019: 50488,
+      projects2020: 0, capacity2020: 0,
+      projects2021: 1, capacity2021: 7300,
+      totalProjects: 19, totalCapacity: 106011 
+    },
+    { 
+      state: "Kerala", 
+      projects2017: 1, capacity2017: 1300,
+      projects2018: 0, capacity2018: 0,
+      projects2019: 0, capacity2019: 0,
+      projects2020: 0, capacity2020: 0,
+      projects2021: 0, capacity2021: 0,
+      totalProjects: 1, totalCapacity: 1300 
+    },
+    { 
+      state: "Madhya Pradesh", 
+      projects2017: 3, capacity2017: 22102,
+      projects2018: 3, capacity2018: 22340,
+      projects2019: 1, capacity2019: 5653,
+      projects2020: 0, capacity2020: 0,
+      projects2021: 1, capacity2021: 10000,
+      totalProjects: 8, totalCapacity: 60095 
+    },
+    { 
+      state: "Maharashtra", 
+      projects2017: 0, capacity2017: 0,
+      projects2018: 0, capacity2018: 0,
+      projects2019: 0, capacity2019: 0,
+      projects2020: 1, capacity2020: 5600,
+      projects2021: 9, capacity2021: 34640,
+      totalProjects: 10, totalCapacity: 40240 
+    },
+    { 
+      state: "Manipur", 
+      projects2017: 1, capacity2017: 1600,
+      projects2018: 0, capacity2018: 0,
+      projects2019: 0, capacity2019: 0,
+      projects2020: 0, capacity2020: 0,
+      projects2021: 0, capacity2021: 0,
+      totalProjects: 1, totalCapacity: 1600 
+    },
+    { 
+      state: "Odisha", 
+      projects2017: 2, capacity2017: 1200,
+      projects2018: 0, capacity2018: 0,
+      projects2019: 0, capacity2019: 0,
+      projects2020: 0, capacity2020: 0,
+      projects2021: 0, capacity2021: 0,
+      totalProjects: 2, totalCapacity: 1200 
+    },
+    { 
+      state: "Punjab", 
+      projects2017: 14, capacity2017: 47660,
+      projects2018: 19, capacity2018: 100015,
+      projects2019: 5, capacity2019: 28945,
+      projects2020: 6, capacity2020: 31632,
+      projects2021: 13, capacity2021: 58979,
+      totalProjects: 57, totalCapacity: 267231 
+    },
+    { 
+      state: "Rajasthan", 
+      projects2017: 1, capacity2017: 6000,
+      projects2018: 10, capacity2018: 41829,
+      projects2019: 1, capacity2019: 5800,
+      projects2020: 4, capacity2020: 28405,
+      projects2021: 0, capacity2021: 0,
+      totalProjects: 16, totalCapacity: 82034 
+    },
+    { 
+      state: "Tamil Nadu", 
+      projects2017: 0, capacity2017: 10000,
+      projects2018: 3, capacity2018: 14576,
+      projects2019: 3, capacity2019: 23260,
+      projects2020: 0, capacity2020: 0,
+      projects2021: 1, capacity2021: 5386,
+      totalProjects: 7, totalCapacity: 53222 
+    },
+    { 
+      state: "Telangana", 
+      projects2017: 0, capacity2017: 0,
+      projects2018: 4, capacity2018: 20000,
+      projects2019: 5, capacity2019: 47320,
+      projects2020: 0, capacity2020: 0,
+      projects2021: 0, capacity2021: 0,
+      totalProjects: 9, totalCapacity: 67320 
+    },
+    { 
+      state: "Tripura", 
+      projects2017: 0, capacity2017: 0,
+      projects2018: 0, capacity2018: 0,
+      projects2019: 0, capacity2019: 0,
+      projects2020: 0, capacity2020: 0,
+      projects2021: 3, capacity2021: 4786,
+      totalProjects: 3, totalCapacity: 4786 
+    },
+    { 
+      state: "Uttar Pradesh", 
+      projects2017: 61, capacity2017: 272622,
+      projects2018: 41, capacity2018: 205681,
+      projects2019: 7, capacity2019: 59325,
+      projects2020: 17, capacity2020: 97424,
+      projects2021: 1, capacity2021: 100,
+      totalProjects: 127, totalCapacity: 635152 
+    },
+    { 
+      state: "Uttrakhand", 
+      projects2017: 1, capacity2017: 2400,
+      projects2018: 0, capacity2018: 0,
+      projects2019: 0, capacity2019: 0,
+      projects2020: 0, capacity2020: 0,
+      projects2021: 0, capacity2021: 0,
+      totalProjects: 1, totalCapacity: 2400 
+    }
+  ];
+
+  // Simulating data loading from CSV
+  useEffect(() => {
+    // This would normally be an API call to load the CSV data
+    // For now, we'll use our processed CSV data and add some dummy fields
+    const enhancedData = csvData.map(item => {
+      // Add dummy fields for presentation
+      return {
+        ...item,
+        availableCapacity: Math.round(item.totalCapacity * 0.3), // 30% of total capacity is available (dummy)
+        temperature: `${Math.floor(Math.random() * 4) + 1}-${Math.floor(Math.random() * 3) + 3}°C`,
+        humidity: `${Math.floor(Math.random() * 10) + 80}-${Math.floor(Math.random() * 5) + 90}%`,
+        costPerUnit: `Rs. ${Math.floor(Math.random() * 100) + 300} per ton/month`,
+        facilities: item.totalProjects > 0 ? Array(Math.min(4, item.totalProjects)).fill(0).map((_, idx) => ({
+          name: `${item.state} Cold Storage ${idx + 1}`,
+          location: `City ${idx + 1}`,
+          capacity: Math.round(item.totalCapacity / Math.min(4, item.totalProjects)),
+          available: Math.round(item.totalCapacity * 0.3 / Math.min(4, item.totalProjects)),
+          temp: `${Math.floor(Math.random() * 4) + 1}°C`
+        })) : []
+      };
+    });
+    
+    // Simulate loading delay
+    setTimeout(() => {
+      setStorageData(enhancedData);
+      setFilteredData(enhancedData);
+      
+      // Extract state options for dropdown
+      const states = enhancedData.map(item => item.state);
+      setStateOptions(states);
+      
+      setLoading(false);
+    }, 1000);
+  }, []);
+  
+  // Handle state selection
+  const handleStateChange = (event, newValue) => {
+    setSelectedState(newValue);
+    
+    if (newValue) {
+      const filtered = storageData.filter(item => item.state === newValue);
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(storageData);
+    }
+  };
+
+  // Handle view type change
+  const handleViewTypeChange = (event, newViewType) => {
+    if (newViewType !== null) {
+      setViewType(newViewType);
+    }
+  };
+
+  // Handle data metric change
+  const handleDataMetricChange = (event, newMetric) => {
+    if (newMetric !== null) {
+      setDataMetric(newMetric);
+    }
+  };
+
+  // Handle year view change
+  const handleYearViewChange = (event) => {
+    setYearView(event.target.value);
+  };
+
+  // Get value based on selected year and metric
+  const getValue = (item) => {
+    if (dataMetric === 'capacity') {
+      switch (yearView) {
+        case '2017-18': return item.capacity2017;
+        case '2018-19': return item.capacity2018;
+        case '2019-20': return item.capacity2019;
+        case '2020-21': return item.capacity2020;
+        case '2021-22': return item.capacity2021;
+        default: return item.totalCapacity;
+      }
+    } else {
+      switch (yearView) {
+        case '2017-18': return item.projects2017;
+        case '2018-19': return item.projects2018;
+        case '2019-20': return item.projects2019;
+        case '2020-21': return item.projects2020;
+        case '2021-22': return item.projects2021;
+        default: return item.totalProjects;
+      }
+    }
+  };
+  
+  // Calculate total available capacity
+  const totalAvailableCapacity = filteredData.reduce((sum, item) => sum + item.availableCapacity, 0);
+
+  // Get label for the value
+  const getValueLabel = () => {
+    return dataMetric === 'capacity' ? 'Capacity (MT)' : 'Number of Projects';
+  };
+
+  // Calculate totals
+  const totalProjects = filteredData.reduce((sum, item) => 
+    sum + (yearView === 'total' ? item.totalProjects : 
+          yearView === '2017-18' ? item.projects2017 :
+          yearView === '2018-19' ? item.projects2018 :
+          yearView === '2019-20' ? item.projects2019 :
+          yearView === '2020-21' ? item.projects2020 :
+          item.projects2021), 0);
+  
+  const totalCapacity = filteredData.reduce((sum, item) => 
+    sum + (yearView === 'total' ? item.totalCapacity : 
+          yearView === '2017-18' ? item.capacity2017 :
+          yearView === '2018-19' ? item.capacity2018 :
+          yearView === '2019-20' ? item.capacity2019 :
+          yearView === '2020-21' ? item.capacity2020 :
+          item.capacity2021), 0);
+
+  // Prepare chart data
+  const chartData = {
+    labels: filteredData
+      .sort((a, b) => getValue(b) - getValue(a))
+      .map(item => item.state),
+    datasets: [
+      {
+        label: getValueLabel(),
+        data: filteredData
+          .sort((a, b) => getValue(b) - getValue(a))
+          .map(item => getValue(item)),
+        backgroundColor: dataMetric === 'capacity' ? '#4caf50' : '#2196f3',
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: `Cold Storage ${dataMetric === 'capacity' ? 'Capacity' : 'Projects'} by State (${yearView === 'total' ? 'Total' : yearView})`,
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: getValueLabel()
+        }
+      }
+    }
+  };
+
+  return (
+    <Container maxWidth="xl">
+      <Box sx={{ pt: 3, pb: 6 }}>
+        <Typography variant="h4" gutterBottom>
+          Cold Storage Insights
+        </Typography>
+        
+        <Paper sx={{ p: 3, mb: 4, bgcolor: '#e8f5e9' }}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} md={8}>
+              <Typography variant="h6">
+                Cold Storage Facilities Across India
+              </Typography>
+              <Typography variant="body1">
+                Explore cold storage facilities across different states with data on capacity and projects from 2017-2022.
+                India has a total of {csvData.reduce((sum, item) => sum + item.totalProjects, 0)} cold storage facilities 
+                with a combined capacity of {csvData.reduce((sum, item) => sum + item.totalCapacity, 0).toLocaleString()} metric tons.
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Autocomplete
+                options={stateOptions}
+                value={selectedState}
+                onChange={handleStateChange}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Search by State"
+                    variant="outlined"
+                    fullWidth
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        <>
+                          <InputAdornment position="start">
+                            <SearchIcon />
+                          </InputAdornment>
+                          {params.InputProps.startAdornment}
+                        </>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+          </Grid>
+        </Paper>
+        
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', my: 5 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <>
+            {/* Control Panel */}
+            <Paper sx={{ p: 2, mb: 4 }}>
+              <Grid container spacing={2} alignItems="center">
+                <Grid item xs={12} md={4}>
+                  <Typography variant="subtitle1" gutterBottom>
+                    View Type:
+                  </Typography>
+                  <ToggleButtonGroup
+                    value={viewType}
+                    exclusive
+                    onChange={handleViewTypeChange}
+                    aria-label="view type"
+                    size="small"
+                    fullWidth
+                  >
+                    <ToggleButton value="chart" aria-label="chart view">
+                      Chart View
+                    </ToggleButton>
+                    <ToggleButton value="table" aria-label="table view">
+                      Table View
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Grid>
+                
+                <Grid item xs={12} md={4}>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Data Metric:
+                  </Typography>
+                  <ToggleButtonGroup
+                    value={dataMetric}
+                    exclusive
+                    onChange={handleDataMetricChange}
+                    aria-label="data metric"
+                    size="small"
+                    fullWidth
+                  >
+                    <ToggleButton value="capacity" aria-label="capacity">
+                      Capacity (MT)
+                    </ToggleButton>
+                    <ToggleButton value="projects" aria-label="projects">
+                      Projects
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Grid>
+                
+                <Grid item xs={12} md={4}>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Year:
+                  </Typography>
+                  <FormControl fullWidth size="small">
+                    <Select
+                      value={yearView}
+                      onChange={handleYearViewChange}
+                    >
+                      <MenuItem value="total">Total (2017-2022)</MenuItem>
+                      <MenuItem value="2017-18">2017-18</MenuItem>
+                      <MenuItem value="2018-19">2018-19</MenuItem>
+                      <MenuItem value="2019-20">2019-20</MenuItem>
+                      <MenuItem value="2020-21">2020-21</MenuItem>
+                      <MenuItem value="2021-22">2021-22</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+              
+              <Box sx={{ mt: 2, pt: 2, borderTop: '1px solid #e0e0e0' }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    <Typography variant="body2">
+                      {yearView === 'total' ? 'Total Projects (2017-2022):' : `Projects (${yearView}):`} 
+                      <Box component="span" sx={{ ml: 1, fontWeight: 'bold' }}>
+                        {totalProjects}
+                      </Box>
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Typography variant="body2">
+                      {yearView === 'total' ? 'Total Capacity (2017-2022):' : `Capacity (${yearView}):`}
+                      <Box component="span" sx={{ ml: 1, fontWeight: 'bold' }}>
+                        {totalCapacity.toLocaleString()} MT
+                      </Box>
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Paper>
+            
+            {/* Chart View */}
+            {viewType === 'chart' && (
+              <Paper sx={{ p: 2, mb: 4, height: '500px' }}>
+                <Typography variant="h6" gutterBottom align="center">
+                  Cold Storage {dataMetric === 'capacity' ? 'Capacity' : 'Projects'} by State ({yearView === 'total' ? 'Total 2017-2022' : yearView})
+                </Typography>
+                <Box sx={{ height: 450, width: '100%' }}>
+                  <Bar data={chartData} options={chartOptions} />
+                </Box>
+              </Paper>
+            )}
+            
+            {/* Table View */}
+            {viewType === 'table' && (
+              <Paper sx={{ p: 2, mb: 4, overflowX: 'auto' }}>
+                <Typography variant="h6" gutterBottom align="center">
+                  Cold Storage Data by State ({yearView === 'total' ? 'Total 2017-2022' : yearView})
+                </Typography>
+                <TableContainer>
+                  <Table aria-label="cold storage data table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell><Typography fontWeight="bold">State</Typography></TableCell>
+                        <TableCell align="right"><Typography fontWeight="bold">Projects</Typography></TableCell>
+                        <TableCell align="right"><Typography fontWeight="bold">Capacity (MT)</Typography></TableCell>
+                        {yearView === 'total' && (
+                          <>
+                            <TableCell align="right"><Typography fontWeight="bold">% of National Projects</Typography></TableCell>
+                            <TableCell align="right"><Typography fontWeight="bold">% of National Capacity</Typography></TableCell>
+                          </>
+                        )}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {filteredData
+                        .sort((a, b) => getValue(b) - getValue(a))
+                        .map((state) => {
+                          const projects = yearView === 'total' ? state.totalProjects :
+                                          yearView === '2017-18' ? state.projects2017 :
+                                          yearView === '2018-19' ? state.projects2018 :
+                                          yearView === '2019-20' ? state.projects2019 :
+                                          yearView === '2020-21' ? state.projects2020 :
+                                          state.projects2021;
+                          
+                          const capacity = yearView === 'total' ? state.totalCapacity :
+                                          yearView === '2017-18' ? state.capacity2017 :
+                                          yearView === '2018-19' ? state.capacity2018 :
+                                          yearView === '2019-20' ? state.capacity2019 :
+                                          yearView === '2020-21' ? state.capacity2020 :
+                                          state.capacity2021;
+                          
+                          const totalAllProjects = csvData.reduce((sum, item) => 
+                            sum + (yearView === 'total' ? item.totalProjects : 
+                                  yearView === '2017-18' ? item.projects2017 :
+                                  yearView === '2018-19' ? item.projects2018 :
+                                  yearView === '2019-20' ? item.projects2019 :
+                                  yearView === '2020-21' ? item.projects2020 :
+                                  item.projects2021), 0);
+                          
+                          const totalAllCapacity = csvData.reduce((sum, item) => 
+                            sum + (yearView === 'total' ? item.totalCapacity : 
+                                  yearView === '2017-18' ? item.capacity2017 :
+                                  yearView === '2018-19' ? item.capacity2018 :
+                                  yearView === '2019-20' ? item.capacity2019 :
+                                  yearView === '2020-21' ? item.capacity2020 :
+                                  item.capacity2021), 0);
+                          
+                          const projectPercentage = totalAllProjects === 0 ? 0 : (projects / totalAllProjects * 100).toFixed(2);
+                          const capacityPercentage = totalAllCapacity === 0 ? 0 : (capacity / totalAllCapacity * 100).toFixed(2);
+                          
+                          return (
+                            <TableRow key={state.state}>
+                              <TableCell component="th" scope="row">
+                                <Typography fontWeight="medium">{state.state}</Typography>
+                              </TableCell>
+                              <TableCell align="right">{projects}</TableCell>
+                              <TableCell align="right">{capacity.toLocaleString()}</TableCell>
+                              {yearView === 'total' && (
+                                <>
+                                  <TableCell align="right">{projectPercentage}%</TableCell>
+                                  <TableCell align="right">{capacityPercentage}%</TableCell>
+                                </>
+                              )}
+                            </TableRow>
+                          );
+                        })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Paper>
+            )}
+            
+            {/* Summary Stats */}
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={4}>
+                <Card sx={{ height: '100%' }}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      Top States by Capacity
+                    </Typography>
+                    <Divider sx={{ mb: 2 }} />
+                    {csvData
+                      .sort((a, b) => b.totalCapacity - a.totalCapacity)
+                      .slice(0, 5)
+                      .map((state, index) => (
+                        <Box key={state.state} sx={{ mb: 1.5, display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2">
+                            {index + 1}. {state.state}
+                          </Typography>
+                          <Typography variant="body2" fontWeight="bold">
+                            {state.totalCapacity.toLocaleString()} MT
+                          </Typography>
+                        </Box>
+                      ))
+                    }
+                  </CardContent>
+                </Card>
+              </Grid>
+              
+              <Grid item xs={12} md={4}>
+                <Card sx={{ height: '100%' }}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      Top States by Projects
+                    </Typography>
+                    <Divider sx={{ mb: 2 }} />
+                    {csvData
+                      .sort((a, b) => b.totalProjects - a.totalProjects)
+                      .slice(0, 5)
+                      .map((state, index) => (
+                        <Box key={state.state} sx={{ mb: 1.5, display: 'flex', justifyContent: 'space-between' }}>
+                          <Typography variant="body2">
+                            {index + 1}. {state.state}
+                          </Typography>
+                          <Typography variant="body2" fontWeight="bold">
+                            {state.totalProjects} projects
+                          </Typography>
+                        </Box>
+                      ))
+                    }
+                  </CardContent>
+                </Card>
+              </Grid>
+              
+              <Grid item xs={12} md={4}>
+                <Card sx={{ height: '100%' }}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      Annual Growth
+                    </Typography>
+                    <Divider sx={{ mb: 2 }} />
+                    <Box sx={{ mb: 1.5, display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="body2">2017-18:</Typography>
+                      <Typography variant="body2" fontWeight="bold">
+                        {csvData.reduce((sum, item) => sum + item.capacity2017, 0).toLocaleString()} MT
+                      </Typography>
+                    </Box>
+                    <Box sx={{ mb: 1.5, display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="body2">2018-19:</Typography>
+                      <Typography variant="body2" fontWeight="bold">
+                        {csvData.reduce((sum, item) => sum + item.capacity2018, 0).toLocaleString()} MT
+                      </Typography>
+                    </Box>
+                    <Box sx={{ mb: 1.5, display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="body2">2019-20:</Typography>
+                      <Typography variant="body2" fontWeight="bold">
+                        {csvData.reduce((sum, item) => sum + item.capacity2019, 0).toLocaleString()} MT
+                      </Typography>
+                    </Box>
+                    <Box sx={{ mb: 1.5, display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="body2">2020-21:</Typography>
+                      <Typography variant="body2" fontWeight="bold">
+                        {csvData.reduce((sum, item) => sum + item.capacity2020, 0).toLocaleString()} MT
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="body2">2021-22:</Typography>
+                      <Typography variant="body2" fontWeight="bold">
+                        {csvData.reduce((sum, item) => sum + item.capacity2021, 0).toLocaleString()} MT
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+            
+            {/* Display individual facilities for selected state */}
+            {selectedState && filteredData.length > 0 && filteredData[0].facilities && filteredData[0].facilities.length > 0 && (
+              <Box sx={{ mt: 4 }}>
+                <Typography variant="h5" gutterBottom>
+                  {selectedState} - Individual Cold Storage Facilities
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  Note: These facility details are representative and for demonstration purposes only.
+                </Typography>
+                <Grid container spacing={3}>
+                  {filteredData[0].facilities.map((facility, index) => (
+                    <Grid item xs={12} sm={6} md={3} key={index}>
+                      <Card sx={{ height: '100%' }}>
+                        <CardContent>
+                          <Typography variant="h6" gutterBottom>
+                            {facility.name}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                            {facility.location}
+                          </Typography>
+                          <Divider sx={{ my: 1.5 }} />
+                          <Box sx={{ mt: 2 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                              <Typography variant="body2">Capacity:</Typography>
+                              <Typography variant="body2" fontWeight="bold">
+                                {facility.capacity.toLocaleString()} MT
+                              </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                              <Typography variant="body2">Available:</Typography>
+                              <Typography variant="body2" fontWeight="bold" color="success.main">
+                                {facility.available.toLocaleString()} MT
+                              </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                              <Typography variant="body2">Temperature:</Typography>
+                              <Typography variant="body2" fontWeight="bold">
+                                {facility.temp}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            )}
+          </>
+        )}
+      </Box>
+    </Container>
+  );
+};
+
+export default EnhancedColdStorageInsights;
